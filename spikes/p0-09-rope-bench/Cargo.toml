@@ -1,0 +1,13 @@
+[package]
+name = "rope-bench"
+version = "0.0.0"
+edition = "2024"
+publish = false
+
+[dependencies]
+ropey = "=1.6.1"
+crop = { version = "=0.4.3", features = ["graphemes", "utf16-metric"] }
+unicode-segmentation = "1.13"
+
+[profile.release]
+debug = 1

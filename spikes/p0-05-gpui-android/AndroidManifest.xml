@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- P0-05 の検証用。Java のコードを持たない NativeActivity のアプリ。 -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="org.hisuinotes.p005"
+    android:versionCode="1"
+    android:versionName="0.0">
+  <uses-sdk android:minSdkVersion="30" android:targetSdkVersion="35" />
+  <application android:label="Hisui P0-05" android:hasCode="false" android:debuggable="true">
+    <activity android:name="android.app.NativeActivity"
+        android:exported="true"
+        android:configChanges="orientation|screenSize|screenLayout|keyboardHidden|keyboard|density"
+        android:windowSoftInputMode="adjustResize">
+      <meta-data android:name="android.app.lib_name" android:value="gpui_android" />
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN" />
+        <category android:name="android.intent.category.LAUNCHER" />
+      </intent-filter>
+    </activity>
+  </application>
+</manifest>
