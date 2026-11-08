@@ -133,8 +133,8 @@ M4以降はPhase 4以降の構成に従い、M4完了時に本計画を改訂す
 
 | ID | 検証内容 | 成果物 | 完了条件 |
 |---|---|---|---|
-| P0-11 | LSP・MCP・ACPの最小クライアント（デスクトップ、stdio。MCPはStreamable HTTPも） | 検証記録 | 初期化・Capability Negotiation・1往復のリクエストが成立する |
-| P0-12 | Androidのストア規約（iOSは保留）、外部プロセス実行の制約、リモート接続の要件 | 検証記録 | 規約の該当条項と、プラグイン配布・LSP実行方式への影響を記録する |
+| P0-11 | LSP・MCP・ACPの最小クライアント（デスクトップ、stdio。MCPはStreamable HTTPも） | [検証記録](research/P0-11-protocol-clients.md) | 初期化・Capability Negotiation・1往復のリクエストが成立する。**完了（2026-11-09、Linux）。** LSP（marksman）、MCP（stdio・Streamable HTTP）、ACPで成立 |
+| P0-12 | Androidのストア規約（iOSは保留）、外部プロセス実行の制約、リモート接続の要件 | [検証記録](research/P0-12-android-store-policy.md) | 規約の該当条項と、プラグイン配布・LSP実行方式への影響を記録する。**完了（2026-11-09）。** WASMプラグインはVM・インタプリタの適用除外に合うと解釈。Androidでは外部プロセスのLSP・stdioのMCPを起動できず、リモート接続が主 |
 
 ## 6. Phase 1 着手内容
 
@@ -187,4 +187,5 @@ ADR-0001〜0003採択後に着手する。
 
 1. M0完了（2026-11-08）: Tier Aの検証とADR-0001〜0005の採択がそろった（P0-02のIBus、P0-03の複数行などは未確認の事項として記録済み）。
 2. Tier B完了（2026-11-09）: P0-07（ADR-0006）、P0-10（ADR-0007）、P0-13（エミュレーター）、P0-05（Go）。Androidの残りの課題は統合開発計画のPhase 9に記載した。
-3. Tier C（P0-11: LSP・MCP・ACPの最小クライアント、P0-12: ストア規約）に進む。
+3. Tier C完了（2026-11-09）: P0-11（LSP・MCP・ACP）、P0-12（ストア規約）。Phase 0の作業分解はすべて完了（iOS関連のP0-04は保留）。
+4. Phase 1（M1: ワークスペース、CI、Core/Platform/Frontendの分離）に着手する。
