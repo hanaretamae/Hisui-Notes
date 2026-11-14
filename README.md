@@ -47,7 +47,8 @@ cargo deny check                                         # ライセンス・脆
 | `ui-gpui` | GPUIのフロントエンド |
 | `hisui-notes` | 実行ファイル。各層を組み立てる |
 | `text-buffer` | Rope、編集、Undo tree、位置変換、書記素境界。[Spec](docs/spec/text-buffer.md) |
-| `document`、`vault`、`parser-markdown` | Phase 2で実装する（現在は空） |
+| `document` | 文書セッション（ビュー、選択範囲、編集コマンド、IMEの変換中の文字列、保存状態）。[Spec](docs/spec/document-session.md)。文書モデル・`parser-api` はM3 |
+| `vault`、`parser-markdown` | Phase 2で実装する（現在は空） |
 | `xtask` | 開発用の検査 |
 
 ## ライセンス

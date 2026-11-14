@@ -1,6 +1,6 @@
 [package]
 name = "document"
-description = "文書モデル、文書セッション、文書形式拡張API、parser-api（ADR-0002）。Phase 2で実装する"
+description = "文書モデル、文書セッション、文書形式拡張API、parser-api（ADR-0002）。文書セッションの仕様は docs/spec/document-session.md"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
@@ -9,3 +9,6 @@ publish.workspace = true
 [dependencies]
 text-buffer.workspace = true
 app-api.workspace = true
+
+[dev-dependencies]
+proptest.workspace = true
