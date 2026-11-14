@@ -1,9 +1,18 @@
 [package]
 name = "text-buffer"
-description = "Rope、編集操作、履歴、位置変換、書記素境界（ADR-0002、ADR-0003）。Phase 2で実装する"
+description = "Rope、編集操作、履歴、位置変換、書記素境界（ADR-0002、ADR-0003）。仕様は docs/spec/text-buffer.md"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
 publish.workspace = true
 
 [dependencies]
+ropey.workspace = true
+unicode-segmentation.workspace = true
+serde.workspace = true
+
+[dev-dependencies]
+# チャンクを小さくし、チャンク境界をまたぐ書記素・CRLF をテストで生じさせる（Spec §8）
+ropey = { workspace = true, features = ["small_chunks"] }
+proptest.workspace = true
+serde_json.workspace = true

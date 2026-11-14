@@ -28,6 +28,10 @@ serde_json = "1"
 futures-channel = "0.3"
 futures = "0.3"
 log = "0.4"
+# ADR-0003。行区切りは LF・CR・CRLF のみ（Spec text-buffer §3.2）
+ropey = { version = "=1.6.1", default-features = false, features = ["simd", "cr_lines"] }
+unicode-segmentation = "1.13"
+proptest = "1"
 env_logger = "0.11"
 
 # ADR-0001: Zed の [patch.crates-io] のうち GPUI の依存に関係するもの。GPUI の更新時に照合する。
