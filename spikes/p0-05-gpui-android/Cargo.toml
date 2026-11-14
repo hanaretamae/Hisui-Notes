@@ -1,0 +1,33 @@
+[package]
+name = "gpui-android"
+version = "0.0.0"
+edition = "2024"
+publish = false
+
+[lib]
+crate-type = ["cdylib"]
+
+[features]
+default = ["native-activity"]
+# Java のコードを持たない APK（build-apk.sh）
+native-activity = ["android-activity/native-activity"]
+# GameActivity（AndroidX）。IME の変換入力を受け取れる。Gradle で APK を作る（android/）
+game-activity = ["android-activity/game-activity"]
+
+# ADR-0001: Zed v1.27.0 のコミットで参照する。
+[dependencies]
+gpui = { git = "https://github.com/zed-industries/zed", rev = "c84af5b99cbc366d675064e52b23664a015b6e35" }
+gpui_wgpu = { git = "https://github.com/zed-industries/zed", rev = "c84af5b99cbc366d675064e52b23664a015b6e35" }
+android-activity = "0.6"
+raw-window-handle = "0.6"
+log = "0.4"
+android_logger = "0.15"
+anyhow = "1"
+futures = "0.3"
+unicode-segmentation = "1.10"
+
+[patch.crates-io]
+async-process = { git = "https://github.com/zed-industries/async-process.git", rev = "0b6d6713570af61806e1e5cb40e0f757cb93fd9d" }
+async-task = { git = "https://github.com/zed-industries/async-task.git", rev = "015845a19fc31752c02367567d3b8900a406f9da" }
+calloop = { git = "https://github.com/zed-industries/calloop", rev = "3759371fee14c40066d64777e2a36b6ffcc22590" }
+khronos-egl = { git = "https://github.com/zed-industries/khronos-egl", rev = "42214b36347b108fd9630ca6254b96dde59e04fe" }

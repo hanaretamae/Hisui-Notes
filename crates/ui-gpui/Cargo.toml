@@ -1,0 +1,17 @@
+[package]
+name = "ui-gpui"
+description = "GPUIのフロントエンド（ADR-0002）"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[dependencies]
+app-api.workspace = true
+gpui.workspace = true
+futures.workspace = true
+
+[dev-dependencies]
+gpui = { workspace = true, features = ["test-support"] }
+app-core.workspace = true
+platform.workspace = true

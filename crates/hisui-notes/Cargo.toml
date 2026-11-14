@@ -1,0 +1,17 @@
+[package]
+name = "hisui-notes"
+description = "Hisui Notes の実行ファイル。各層を組み立てる（ADR-0002）"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[dependencies]
+app-api.workspace = true
+app-core.workspace = true
+platform.workspace = true
+ui-gpui.workspace = true
+gpui.workspace = true
+gpui_platform.workspace = true
+log.workspace = true
+env_logger.workspace = true

@@ -1,0 +1,18 @@
+[package]
+name = "md-parsers"
+version = "0.0.0"
+edition = "2024"
+publish = false
+
+[dependencies]
+pulldown-cmark = { version = "=0.13.6", default-features = false, features = ["html"] }
+comrak = { version = "=0.59.0", default-features = false }
+markdown = "=1.0.0"
+markdown-it = { version = "=0.6.1", default-features = false }
+tree-sitter = "=0.27.2"
+tree-sitter-md = { version = "=0.5.4", features = ["parser"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+[profile.release]
+debug = 1
