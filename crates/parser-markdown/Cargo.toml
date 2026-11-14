@@ -1,6 +1,6 @@
 [package]
 name = "parser-markdown"
-description = "標準Markdownパーサー（ADR-0002、ADR-0004）。Phase 2で実装する"
+description = "標準Markdownパーサー（ADR-0002、ADR-0004）"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
@@ -8,3 +8,13 @@ publish.workspace = true
 
 [dependencies]
 document.workspace = true
+entities.workspace = true
+unicode-properties.workspace = true
+
+[dev-dependencies]
+serde.workspace = true
+serde_json.workspace = true
+proptest.workspace = true
+comrak.workspace = true
+pulldown-cmark.workspace = true
+markdown.workspace = true

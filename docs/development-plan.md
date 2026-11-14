@@ -191,3 +191,4 @@ ADR-0001〜0003採択後に着手する。
 4. Phase 1（M1: ワークスペース、CI、Core/Platform/Frontendの分離）に着手する。
 5. M1完了（2026-11-14）: ワークスペース、[`app-api` のSpec](spec/app-api.md)と実装、`ui-gpui` の統合テスト、依存の規則の検査（`cargo xtask deps`）、CI（ADR-0010の改訂でCIもNixとした）がそろい、GitHub ActionsのLinux CIで §6.3 の検査がすべて通った。
 6. M2（Phase 2・3: Vault、Markdownの読み込み、日本語IMEでの編集、保存）に着手する。着手前に `text-buffer`・`document`・`vault` のSpecを作成する。
+7. M2完了（2026-11-14）: Vault・Markdownの読み込み・日本語IMEでの編集・保存の画面がそろい、利用者の手動確認で問題が無かった。M3（標準Markdownの解析結果によるReading View、Split View、内部リンク解決、見出し・ブロック参照）に着手する。最初に [`parser-markdown` のSpec](spec/parser-markdown.md)とCommonMark spec 0.31.2 に適合するパーサーを作る。
