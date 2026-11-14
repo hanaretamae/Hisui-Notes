@@ -1,0 +1,10 @@
+[package]
+name = "parser-markdown"
+description = "標準Markdownパーサー（ADR-0002、ADR-0004）。Phase 2で実装する"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[dependencies]
+document.workspace = true

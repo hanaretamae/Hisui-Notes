@@ -1,0 +1,38 @@
+[workspace]
+resolver = "3"
+members = ["crates/*", "xtask"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+license = "MIT OR Apache-2.0"
+publish = false
+
+[workspace.dependencies]
+# 内部クレート（依存の規則は ADR-0002、検査は `cargo xtask deps`）
+app-api = { path = "crates/app-api" }
+text-buffer = { path = "crates/text-buffer" }
+document = { path = "crates/document" }
+vault = { path = "crates/vault" }
+parser-markdown = { path = "crates/parser-markdown" }
+platform = { path = "crates/platform" }
+app-core = { path = "crates/app-core" }
+ui-gpui = { path = "crates/ui-gpui" }
+
+# GPUI（ADR-0001: Zed v1.27.0 のコミットで参照する）
+gpui = { git = "https://github.com/zed-industries/zed", rev = "c84af5b99cbc366d675064e52b23664a015b6e35" }
+gpui_platform = { git = "https://github.com/zed-industries/zed", rev = "c84af5b99cbc366d675064e52b23664a015b6e35", features = ["wayland", "x11"] }
+
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+futures-channel = "0.3"
+futures = "0.3"
+log = "0.4"
+env_logger = "0.11"
+
+# ADR-0001: Zed の [patch.crates-io] のうち GPUI の依存に関係するもの。GPUI の更新時に照合する。
+[patch.crates-io]
+async-process = { git = "https://github.com/zed-industries/async-process.git", rev = "0b6d6713570af61806e1e5cb40e0f757cb93fd9d" }
+async-task = { git = "https://github.com/zed-industries/async-task.git", rev = "015845a19fc31752c02367567d3b8900a406f9da" }
+calloop = { git = "https://github.com/zed-industries/calloop", rev = "3759371fee14c40066d64777e2a36b6ffcc22590" }
+khronos-egl = { git = "https://github.com/zed-industries/khronos-egl", rev = "42214b36347b108fd9630ca6254b96dde59e04fe" }

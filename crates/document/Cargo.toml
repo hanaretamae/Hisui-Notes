@@ -1,0 +1,11 @@
+[package]
+name = "document"
+description = "文書モデル、文書セッション、文書形式拡張API、parser-api（ADR-0002）。Phase 2で実装する"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[dependencies]
+text-buffer.workspace = true
+app-api.workspace = true
