@@ -7,7 +7,6 @@ license.workspace = true
 publish.workspace = true
 
 [dependencies]
-app-api.workspace = true
 app-core.workspace = true
 platform.workspace = true
 ui-gpui.workspace = true

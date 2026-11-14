@@ -8,10 +8,11 @@ publish.workspace = true
 
 [dependencies]
 app-api.workspace = true
+app-core.workspace = true
 gpui.workspace = true
 futures.workspace = true
 
 [dev-dependencies]
 gpui = { workspace = true, features = ["test-support"] }
-app-core.workspace = true
+document.workspace = true
 platform.workspace = true
