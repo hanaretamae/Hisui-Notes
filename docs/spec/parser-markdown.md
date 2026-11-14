@@ -1,6 +1,6 @@
 # Spec: 標準Markdownパーサー（`parser-markdown`）
 
-- **状態:** 草案（2026-11-14）。M3（実行計画 §4）の最初の作業。§5の制限と§7の判断は承認待ち。
+- **状態:** 草案（2026-11-14）。M3（実行計画 §4）の最初の作業。§5の制限と§7の判断は利用者が承認した（2026-11-14）。
 - **関連:** ADR-0002／ADR-0004／[requirements/parser.md](../requirements/parser.md)／[NFR](../requirements/non-functional.md) NFR-P03／[P0-08 検証記録](../research/P0-08-markdown-parser.md)
 
 ## 1. 目的と範囲
@@ -79,7 +79,7 @@ pub struct Node {
 
 `parser_markdown::html::render(&Node) -> String` は、CommonMark の参照実装（commonmark.js）と同じ形式のHTMLを返す。spec tests と差分試験に使う。Reading View の描画には使わない（Reading View は構文木を直接描画する）。
 
-## 5. 制限（草案。承認待ち）
+## 5. 制限（2026-11-14 承認）
 
 病的な入力で時間とスタックが際限なく増えないように、次の上限を設ける。上限を超えた部分は、その構文として解析しない（原文は失われず、文字列として残る）。
 
@@ -104,7 +104,7 @@ pub struct Node {
 4. 任意の Unicode の入力で panic しない。
 5. ブロック・インラインの入れ子の深さが §5の上限を超えない。
 
-## 7. 参照実装と結果が分かれる入力の扱い（草案。承認待ち）
+## 7. 参照実装と結果が分かれる入力の扱い（2026-11-14 承認）
 
 差分試験（§8）で、参照実装どうしでも結果が分かれる入力が見つかった。spec の記述に沿うものを採り、spec が決めていないものは cmark（C の参照実装）または commonmark.js に合わせる。
 
