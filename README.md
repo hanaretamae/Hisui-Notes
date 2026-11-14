@@ -21,6 +21,34 @@ nix develop
 
 Rustツールチェーン（rustc、cargo、clippy、rustfmt、rust-analyzer）と `cargo-deny` が利用可能になる。
 
+## ビルド・実行・検証
+
+devShellの中で実行する（`nix develop -c <コマンド>` でも可）。CI（[`.github/workflows/ci.yml`](.github/workflows/ci.yml)）も同じコマンドを実行する。
+
+```sh
+cargo build                                              # ビルド
+cargo run -p hisui-notes                                 # アプリの起動（Linux: Wayland・X11）
+cargo test --workspace --locked                          # テスト
+cargo fmt --all --check                                  # 書式の検査
+cargo clippy --workspace --all-targets --locked -- -D warnings  # Lint
+cargo xtask deps                                         # クレート間の依存の規則の検査（ADR-0002）
+cargo deny check                                         # ライセンス・脆弱性・取得元の検査（ネットワークが必要）
+```
+
+## クレート構成
+
+[ADR-0002](docs/adr/0002-crate-structure.md) に従う。仕様は [`docs/spec/`](docs/spec/) に置く。
+
+| クレート | 役割 |
+|---|---|
+| `app-api` | UIとCoreの間のAPI（Command・Query・Event）。[Spec](docs/spec/app-api.md) |
+| `app-core` | `app-api` の実装。GPUIに依存しない |
+| `platform` | OS機能の抽象インターフェースとデスクトップの実装 |
+| `ui-gpui` | GPUIのフロントエンド |
+| `hisui-notes` | 実行ファイル。各層を組み立てる |
+| `text-buffer`、`document`、`vault`、`parser-markdown` | Phase 2で実装する（現在は空） |
+| `xtask` | 開発用の検査 |
+
 ## ライセンス
 
 [MIT](LICENSE-MIT) または [Apache-2.0](LICENSE-APACHE) のいずれかを選択できる（[ADR-0011](docs/adr/0011-license.md)）。

@@ -189,3 +189,4 @@ ADR-0001〜0003採択後に着手する。
 2. Tier B完了（2026-11-09）: P0-07（ADR-0006）、P0-10（ADR-0007）、P0-13（エミュレーター）、P0-05（Go）。Androidの残りの課題は統合開発計画のPhase 9に記載した。
 3. Tier C完了（2026-11-09）: P0-11（LSP・MCP・ACP）、P0-12（ストア規約）。Phase 0の作業分解はすべて完了（iOS関連のP0-04は保留）。
 4. Phase 1（M1: ワークスペース、CI、Core/Platform/Frontendの分離）に着手する。
+5. M1（2026-11-14時点）: ワークスペース、[`app-api` のSpec](spec/app-api.md)と実装、`ui-gpui` の統合テスト、依存の規則の検査（`cargo xtask deps`）、CIの定義（ADR-0010の改訂でCIもNixとした）がそろった。ローカルでは §6.3 の検査がすべて通る。GitHub ActionsでCIを初めて実行し、成功を確認した時点でM1を完了とする。

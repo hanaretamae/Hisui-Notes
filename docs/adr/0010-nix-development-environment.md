@@ -37,3 +37,9 @@
   - Android SDK・NDK（28.2.13676358）・エミュレーター・システムイメージ（API 35、x86_64）はnixpkgsの `androidenv` から取得する。`cargo-ndk`、`lld`、APKの作成用の `jdk17_headless`・`zip`・`gradle_8` を含める。
   - Android SDKの利用条件（Android SDK License）への同意を、`android` シェルの設定（`android_sdk.accept_license = true`）として記録する。利用者の指示（2026-11-08）による。
 - **Consequences:** flake入力が1つ増える。2つのシェルでRustの版を手動で揃える必要がある（`nix flake update` の後に確認する）。`android` シェルの初回の取得は数GBになる。
+
+## 改訂（2026-11-14）: CIでもNixを使う
+
+- **Context:** Consequencesで保留していたCIのツールチェーンをPhase 1のCI構築で決める。`AI_DEVELOPMENT.md` §6.3は、同一の検証をローカルとCIで再現できることを求めている。GPUIのビルドにはdevShellのシステムライブラリが必要になる。
+- **Decision:** GitHub ActionsのCI（`.github/workflows/ci.yml`）でもNixを導入し、検証を `nix develop -c <コマンド>` で実行する。Rustツールチェーン・`cargo-deny`・システムライブラリの版は `flake.lock` でローカルと揃う。
+- **Consequences:** CIの初回の実行でnixpkgsの取得に時間がかかる（Nixのバイナリキャッシュは使わず、cargoのビルド結果のみキャッシュする）。Windows・macOSのCIは各OSの再開時に決める。
