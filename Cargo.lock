@@ -5531,6 +5531,7 @@ dependencies = [
  "app-api",
  "document",
  "platform",
+ "proptest",
 ]
 
 [[package]]

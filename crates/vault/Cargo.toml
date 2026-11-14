@@ -1,6 +1,6 @@
 [package]
 name = "vault"
-description = "Vault、ファイル入出力、外部変更検出、リンク索引（ADR-0002）。Phase 2で実装する"
+description = "Vault、ファイル入出力、外部変更検出、リンク索引（ADR-0002）。仕様は docs/spec/vault.md"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
@@ -10,3 +10,6 @@ publish.workspace = true
 document.workspace = true
 platform.workspace = true
 app-api.workspace = true
+
+[dev-dependencies]
+proptest.workspace = true

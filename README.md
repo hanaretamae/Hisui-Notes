@@ -43,12 +43,13 @@ cargo deny check                                         # ライセンス・脆
 |---|---|
 | `app-api` | UIとCoreの間のAPI（Command・Query・Event）。[Spec](docs/spec/app-api.md) |
 | `app-core` | `app-api` の実装。GPUIに依存しない |
-| `platform` | OS機能の抽象インターフェースとデスクトップの実装 |
+| `platform` | OS機能の抽象インターフェース（ファイルシステムを含む）とデスクトップの実装 |
 | `ui-gpui` | GPUIのフロントエンド |
 | `hisui-notes` | 実行ファイル。各層を組み立てる |
 | `text-buffer` | Rope、編集、Undo tree、位置変換、書記素境界。[Spec](docs/spec/text-buffer.md) |
 | `document` | 文書セッション（ビュー、選択範囲、編集コマンド、IMEの変換中の文字列、保存状態）。[Spec](docs/spec/document-session.md)。文書モデル・`parser-api` はM3 |
-| `vault`、`parser-markdown` | Phase 2で実装する（現在は空） |
+| `vault` | Vaultを開く、一覧、読み込み（UTF-8、BOM）、保存（一時ファイルからの置き換え、衝突の検出）。[Spec](docs/spec/vault.md) |
+| `parser-markdown` | M3で実装する（現在は空） |
 | `xtask` | 開発用の検査 |
 
 ## ライセンス
