@@ -49,12 +49,14 @@ cargo deny check                                         # ライセンス・脆
 | `text-buffer` | Rope、編集、Undo tree、位置変換、書記素境界。[Spec](docs/spec/text-buffer.md) |
 | `document` | 文書セッション（ビュー、選択範囲、編集コマンド、IMEの変換中の文字列、保存状態）。[Spec](docs/spec/document-session.md)。文書モデル・`parser-api` はM3 |
 | `vault` | Vaultを開く、一覧、読み込み（UTF-8、BOM）、保存（一時ファイルからの置き換え、衝突の検出）。[Spec](docs/spec/vault.md) |
-| `parser-markdown` | M3で実装する（現在は空） |
+| `parser-markdown` | 標準Markdownパーサー（CommonMark 0.31.2）。[Spec](docs/spec/parser-markdown.md)。拡張フック・再解析は今後 |
 | `xtask` | 開発用の検査 |
 
 ## ライセンス
 
 [MIT](LICENSE-MIT) または [Apache-2.0](LICENSE-APACHE) のいずれかを選択できる（[ADR-0011](docs/adr/0011-license.md)）。
+
+例外: `crates/parser-markdown/tests/data/commonmark-0.31.2.json`（CommonMark spec の例）は CC BY-SA 4.0 に従う（[同じ場所の README](crates/parser-markdown/tests/data/README.md)）。試験にだけ使い、製品には含めない。
 
 ## AIエージェント向け文書
 

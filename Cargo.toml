@@ -33,6 +33,13 @@ ropey = { version = "=1.6.1", default-features = false, features = ["simd", "cr_
 unicode-segmentation = "1.13"
 proptest = "1"
 env_logger = "0.11"
+# ADR-0004: CommonMark の文字参照（HTML5 の名前付き文字参照の一覧）と、強調の判定に使う Unicode の一般カテゴリー
+entities = "1.0.1"
+unicode-properties = { version = "0.1.3", default-features = false, features = ["general-category"] }
+# ADR-0004 §6: 差分試験の参照実装（開発時のみ。製品のバイナリには含めない）
+comrak = { version = "0.59", default-features = false }
+pulldown-cmark = { version = "0.13", default-features = false, features = ["html"] }
+markdown = "1.0"
 
 # ADR-0001: Zed の [patch.crates-io] のうち GPUI の依存に関係するもの。GPUI の更新時に照合する。
 [patch.crates-io]

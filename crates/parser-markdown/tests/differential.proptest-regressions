@@ -1,0 +1,24 @@
+# Seeds for failure cases proptest has generated in the past. It is
+# automatically read and these particular cases re-run before any
+# novel cases are generated.
+#
+# It is recommended to check this file in to source control so that
+# everyone who runs the test benefits from these saved cases.
+cc 62c2017bd01d609a0870d77160a87c8edfb4ba0768abd4c5b58490039a4fd97c # shrinks to src = "```\n*"
+cc b87b6bcfd4fbbbf03da71a17a3e9ae78b44514c1b00f69fe1520a28ae386c128 # shrinks to src = "<span><!--<!---->"
+cc db46ef3f20ecb5cc7334adf810f8df6262bb6e51378949fd22d71378a7142d82 # shrinks to src = " ![<div>*](u)"
+cc bea0e70af81e959bb4ff9827674f822c56e722fec7b3bb14f41736db0c82b7f0 # shrinks to src = "**\t\na"
+cc 7f28e6e83d34cd620f784f0022ebcdec21a1386adbba67f9e478e9a0ca2d017d # shrinks to src = "[r]:'\n[r]"
+cc 57b37d09da5160d1a5cc91c8ff60ae65ae9492c1a3316061154158e0b26e3f33 # shrinks to src = "`~~~```~~~```~~~```~~~```"
+cc c2d4beb1ff2c2300a0bbaa6026a21bfac235349c2fd87b16033ce2f2f033859b # shrinks to src = "- !['](u)[r]: /u \"t\"\n<span>"
+cc fe8a1b1d589cf00731ea2e6a5b7158dac43797493948f732072dbea265749275 # shrinks to src = ">- [r]: /u \"t\"\n<span>\n<div>"
+cc 6ec9b705ab0b368e49657c637bc33a555570e3d602900d962cc1174374fbe1c9 # shrinks to src = "> ``\n    ``"
+cc 333b6cb4b8b7bcc3d6b75e48b205007771dbc84fb02400cb2daf18e26c7741eb # shrinks to src = "*\n- ```\n        "
+cc cd28f1dc4cb4762b1af86b8c9bfd7e90c0e5dacdb5ac0e0731ea0fc7a735befc # shrinks to src = "1. - \\\n    a"
+cc fb3c370f86648eec02688a6545e6375c7e16d29c92daecb1f1a2b8a63be28734 # shrinks to src = "`~~~```\n    ```*```~~~```"
+cc 973e835bb39f4fbbf528b4f460c4a435ad90164be69b1f036f8393bd28677625 # shrinks to src = "- [r]: /u \"t\"\n\n\n    a"
+cc 60f8a5026a1e31246b28f4ca00fb28069d5ef3614811c1a9219ed2958537e5a8 # shrinks to src = "[r][    ](u)\n\n[r]: /u \"t\"\n![<div>](u)"
+cc 70e10f936885e29e74dcaa75b70d5de605a56a39395a8b6b4572428e081fd8ce # shrinks to src = "- [r]: /u \"t\"\n [r]: /u \"t\"\n"
+cc d5071bce4198c3eddb3ddf8d0f08e094aa69374c9e256718dca117abfcd39756 # shrinks to src = "- <div>\n[r]: /u \"t\"\n---    "
+cc c0aa1d6c7c39ff83baa3b2def5ed916151b3dc279366d88789943b4b1f3ac6b8 # shrinks to src = "```\\&amp;\t~~~\n*"
+cc 934f3c8ffb0f3179e368d6345d2f4c0967d22e5372072ca3adcdbb5f1424ac4b # shrinks to src = "* [r]: /u \"t\"\n[r]: /u \"t\"\n* a"

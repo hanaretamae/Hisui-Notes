@@ -56,8 +56,8 @@ P0-08で pulldown-cmark 0.13.6、comrak 0.59.0、markdown-rs 1.0.0、markdown-it
 
 ### 6. 検証
 
-- CommonMark spec testsの全例への適合をCIで確認する。spec testsのデータの取得方法とライセンスの扱いは、テストの実装時に決める。
-- pulldown-cmarkとcomrakを開発時の依存（`dev-dependencies`）に限って使い、任意の入力で出力を比較する差分試験を行う。製品のバイナリには含めない。
+- CommonMark spec testsの全例への適合をCIで確認する。spec testsのデータの取得方法とライセンスの扱いは、テストの実装時に決める（2026-11-14 追記: 利用者の決定によりデータ（CC BY-SA 4.0）をリポジトリに含める。[Spec: parser-markdown](../spec/parser-markdown.md) §2）。
+- pulldown-cmarkとcomrakを開発時の依存（`dev-dependencies`）に限って使い、任意の入力で出力を比較する差分試験を行う。製品のバイナリには含めない（2026-11-14 追記: 参照実装どうしで結果が分かれる入力があるため、markdown-rs を加えた3つのいずれかとの一致を条件とした。同 §8）。
 - P0-08の病的な入力（[検証記録](../research/P0-08-markdown-parser.md) §3.6）を、時間の上限付きの試験に含める。Fuzz Testingを行う（実行計画 §8）。
 - 複数の拡張（Obsidian Markdownパーサーと試験用の第三者拡張）を同時に有効にした組み合わせの試験を行う。
 
