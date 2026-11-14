@@ -1,6 +1,10 @@
 //! OS機能の抽象インターフェースと、デスクトップの実装（ADR-0002）。
 //!
-//! Core はこのトレイトを通して OS の機能を使う。M1 ではプラットフォームの識別のみを持つ。
+//! Core・Vault はこのトレイトを通して OS の機能を使う。
+
+mod fs;
+
+pub use fs::{DesktopFileSystem, DirEntry, EntryKind, FileSystem};
 
 /// Core が使う OS の機能。
 pub trait PlatformServices: Send + Sync {
