@@ -2,18 +2,48 @@
 //!
 //! GPUI に依存しない（ADR-0002）。
 
-use std::sync::{Arc, Mutex};
+mod documents;
+
+use std::collections::BTreeMap;
+use std::sync::{Arc, Mutex, MutexGuard};
 
 use app_api::{
-    API_VERSION, ApiError, AppApi, AppInfo, Command, ErrorCode, Event, EventReceiver, Query,
-    QueryResponse, STATUS_MESSAGE_MAX_BYTES,
+    API_VERSION, ApiError, AppApi, AppInfo, Command, DocumentId, ErrorCode, Event, EventReceiver,
+    Query, QueryResponse, STATUS_MESSAGE_MAX_BYTES,
 };
 use futures_channel::mpsc::{UnboundedSender, unbounded};
 use platform::PlatformServices;
 
+pub use document::Snapshot as TextSnapshot;
+
+use documents::OpenDocument;
+
+/// 同じプロセスの UI 向けの API（Spec §5A.5）。文書の内容を複製せずに読む。
+pub trait LocalAppApi: AppApi {
+    /// 文書のその時点の不変のスナップショット。文書が無い場合は `None`。
+    fn document_snapshot(&self, document: DocumentId) -> Option<TextSnapshot>;
+}
+
 struct State {
     status_message: String,
     subscribers: Vec<UnboundedSender<Event>>,
+    vault: Option<vault::Vault>,
+    documents: BTreeMap<DocumentId, OpenDocument>,
+    next_document: u64,
+}
+
+impl State {
+    /// 全購読者へ発行する。受信側を破棄した購読者は取り除く（Spec §4 の不変条件）。
+    fn publish(&mut self, event: Event) {
+        self.subscribers
+            .retain(|tx| tx.unbounded_send(event.clone()).is_ok());
+    }
+
+    fn publish_all(&mut self, events: Vec<Event>) {
+        for e in events {
+            self.publish(e);
+        }
+    }
 }
 
 /// アプリケーションコア。
@@ -29,21 +59,25 @@ impl Core {
             state: Mutex::new(State {
                 status_message: String::new(),
                 subscribers: Vec::new(),
+                vault: None,
+                documents: BTreeMap::new(),
+                next_document: 0,
             }),
         }
     }
 
-    /// 全購読者へ発行する。受信側を破棄した購読者は取り除く（Spec §4 の不変条件）。
-    fn publish(state: &mut State, event: Event) {
-        state
-            .subscribers
-            .retain(|tx| tx.unbounded_send(event.clone()).is_ok());
+    fn lock(&self) -> Result<MutexGuard<'_, State>, ApiError> {
+        self.state
+            .lock()
+            .map_err(|_| ApiError::new(ErrorCode::Internal, "state lock poisoned"))
     }
 }
 
 impl AppApi for Core {
     fn execute(&self, command: Command) -> Result<(), ApiError> {
-        match command {
+        // 状態の変更と発行を同じロックの中で行い、発行の順序を全購読者で揃える
+        let mut state = self.lock()?;
+        let events = match command {
             Command::SetStatusMessage { text } => {
                 if text.len() > STATUS_MESSAGE_MAX_BYTES {
                     return Err(ApiError::new(
@@ -51,21 +85,32 @@ impl AppApi for Core {
                         format!("status message exceeds {STATUS_MESSAGE_MAX_BYTES} bytes"),
                     ));
                 }
-                // 状態の変更と発行を同じロックの中で行い、発行の順序を全購読者で揃える
-                let mut state = self
-                    .state
-                    .lock()
-                    .map_err(|_| ApiError::new(ErrorCode::Internal, "state lock poisoned"))?;
                 state.status_message = text.clone();
-                Self::publish(&mut state, Event::StatusMessageChanged { text });
-                log::debug!("status message updated");
-                Ok(())
+                vec![Event::StatusMessageChanged { text }]
             }
-            _ => Err(ApiError::new(ErrorCode::Unsupported, "unsupported command")),
-        }
+            Command::OpenVault { path } => {
+                documents::open_vault(&mut state, &self.platform, &path)?
+            }
+            Command::OpenDocument { path } => documents::open_document(&mut state, &path)?,
+            Command::CloseDocument { document } => documents::close_document(&mut state, document)?,
+            Command::Edit {
+                document,
+                view,
+                command,
+            } => documents::edit(&mut state, document, view, command)?,
+            Command::SaveDocument {
+                document,
+                overwrite,
+            } => documents::save(&mut state, document, overwrite)?,
+            Command::ReloadDocument { document } => documents::reload(&mut state, document)?,
+            _ => return Err(ApiError::new(ErrorCode::Unsupported, "unsupported command")),
+        };
+        state.publish_all(events);
+        Ok(())
     }
 
     fn query(&self, query: Query) -> Result<QueryResponse, ApiError> {
+        let state = self.lock()?;
         match query {
             Query::AppInfo => Ok(QueryResponse::AppInfo(AppInfo {
                 name: "Hisui Notes".into(),
@@ -73,14 +118,8 @@ impl AppApi for Core {
                 api_version: API_VERSION,
                 platform: self.platform.name(),
             })),
-            Query::StatusMessage => {
-                let state = self
-                    .state
-                    .lock()
-                    .map_err(|_| ApiError::new(ErrorCode::Internal, "state lock poisoned"))?;
-                Ok(QueryResponse::StatusMessage(state.status_message.clone()))
-            }
-            _ => Err(ApiError::new(ErrorCode::Unsupported, "unsupported query")),
+            Query::StatusMessage => Ok(QueryResponse::StatusMessage(state.status_message.clone())),
+            q => documents::query(&state, q),
         }
     }
 
@@ -90,5 +129,15 @@ impl AppApi for Core {
             state.subscribers.push(tx);
         }
         rx
+    }
+}
+
+impl LocalAppApi for Core {
+    fn document_snapshot(&self, document: DocumentId) -> Option<TextSnapshot> {
+        let state = self.state.lock().ok()?;
+        state
+            .documents
+            .get(&document)
+            .map(|d| d.session.text().clone())
     }
 }

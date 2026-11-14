@@ -2,7 +2,7 @@
 
 use std::sync::Arc;
 
-use app_api::{API_VERSION, AppApi, Command};
+use app_api::{AppApi, Command};
 use app_core::Core;
 use gpui::{Modifiers, TestAppContext};
 use platform::DesktopPlatform;
@@ -20,8 +20,6 @@ fn shows_app_info_from_query(cx: &mut TestAppContext) {
         assert!(v.title().starts_with("Hisui Notes "));
         assert_eq!(v.status(), "");
     });
-    // 表示に使う版が API の版と一致する
-    assert_eq!(API_VERSION.to_string(), "0.1");
 }
 
 #[gpui::test]

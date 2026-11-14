@@ -6,10 +6,15 @@ mod fs;
 
 pub use fs::{DesktopFileSystem, DirEntry, EntryKind, FileSystem};
 
+use std::sync::Arc;
+
 /// Core が使う OS の機能。
 pub trait PlatformServices: Send + Sync {
     /// プラットフォームの名前（表示用）。
     fn name(&self) -> String;
+
+    /// ファイルシステム（Vault の読み書きに使う）。
+    fn file_system(&self) -> Arc<dyn FileSystem>;
 }
 
 /// デスクトップ（Linux・Windows・macOS）の実装。
@@ -19,5 +24,9 @@ pub struct DesktopPlatform;
 impl PlatformServices for DesktopPlatform {
     fn name(&self) -> String {
         std::env::consts::OS.to_string()
+    }
+
+    fn file_system(&self) -> Arc<dyn FileSystem> {
+        Arc::new(DesktopFileSystem)
     }
 }

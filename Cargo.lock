@@ -234,10 +234,12 @@ name = "app-core"
 version = "0.1.0"
 dependencies = [
  "app-api",
+ "document",
  "futures",
  "futures-channel",
  "log",
  "platform",
+ "vault",
 ]
 
 [[package]]
