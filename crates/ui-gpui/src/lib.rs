@@ -86,6 +86,8 @@ pub struct Workspace {
     focus_editor: bool,
     status: SharedString,
     focus: FocusHandle,
+    /// 画面の文字のフォント（`None` は GPUI の既定。Spec §2-5）。
+    font_family: Option<SharedString>,
     _editor_sub: Option<Subscription>,
     _events: Task<()>,
 }
@@ -131,9 +133,16 @@ impl Workspace {
             focus_editor: false,
             status: SharedString::default(),
             focus: cx.focus_handle(),
+            font_family: None,
             _editor_sub: None,
             _events: task,
         })
+    }
+
+    /// 画面の文字のフォントを設定する（OS の UI フォント。Spec §2-5）。
+    pub fn with_font_family(mut self, family: Option<String>) -> Self {
+        self.font_family = family.map(Into::into);
+        self
     }
 
     /// 見出し（アプリ名と版）。
@@ -417,6 +426,7 @@ impl Render for Workspace {
         let current = self.editor.as_ref().map(|e| e.read(cx).path().to_string());
         div()
             .key_context("Workspace")
+            .when_some(self.font_family.clone(), |d, f| d.font_family(f))
             .track_focus(&self.focus)
             .on_action(cx.listener(|this, _: &Save, window, cx| this.save(window, cx)))
             .on_action(

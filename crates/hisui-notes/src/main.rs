@@ -28,8 +28,14 @@ fn main() {
             ..Default::default()
         };
         let api = api.clone();
+        let font = platform::system_ui_font_family();
+        log::info!("UI font: {font:?}");
         let window = cx.open_window(options, move |window, cx| {
-            cx.new(|cx| Workspace::new(api, window, cx).expect("initial queries"))
+            cx.new(|cx| {
+                Workspace::new(api, window, cx)
+                    .expect("initial queries")
+                    .with_font_family(font)
+            })
         });
         match window {
             Ok(window) => {
