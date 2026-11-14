@@ -9,6 +9,8 @@ publish.workspace = true
 [dependencies]
 app-api.workspace = true
 platform.workspace = true
+document.workspace = true
+vault.workspace = true
 futures-channel.workspace = true
 log.workspace = true
 

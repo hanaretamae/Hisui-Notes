@@ -7,6 +7,13 @@ use std::fmt;
 
 use serde::{Deserialize, Serialize};
 
+mod documents;
+
+pub use documents::{
+    CompositionState, DocumentId, DocumentInfo, EditCommand, Movement, Selection, TextEdit,
+    VaultFiles, ViewId, ViewState,
+};
+
 /// APIの版。副版では追加のみを行う（Spec §3）。
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
 pub struct ApiVersion {
@@ -21,7 +28,7 @@ impl fmt::Display for ApiVersion {
 }
 
 /// 現在のAPIの版。
-pub const API_VERSION: ApiVersion = ApiVersion { major: 0, minor: 1 };
+pub const API_VERSION: ApiVersion = ApiVersion { major: 0, minor: 2 };
 
 /// 状態表示の文字列の上限（UTF-8のバイト数）。
 pub const STATUS_MESSAGE_MAX_BYTES: usize = 4096;
@@ -31,7 +38,31 @@ pub const STATUS_MESSAGE_MAX_BYTES: usize = 4096;
 #[non_exhaustive]
 pub enum Command {
     /// 状態表示の文字列を設定する。
-    SetStatusMessage { text: String },
+    SetStatusMessage {
+        text: String,
+    },
+    // 版0.2（Spec §5A.2）
+    OpenVault {
+        path: String,
+    },
+    OpenDocument {
+        path: String,
+    },
+    CloseDocument {
+        document: DocumentId,
+    },
+    Edit {
+        document: DocumentId,
+        view: ViewId,
+        command: EditCommand,
+    },
+    SaveDocument {
+        document: DocumentId,
+        overwrite: bool,
+    },
+    ReloadDocument {
+        document: DocumentId,
+    },
 }
 
 /// 状態を読む要求。副作用を持たない。
@@ -40,6 +71,38 @@ pub enum Command {
 pub enum Query {
     AppInfo,
     StatusMessage,
+    // 版0.2（Spec §5A.4）
+    VaultFiles,
+    DocumentInfo {
+        document: DocumentId,
+    },
+    ViewState {
+        document: DocumentId,
+        view: ViewId,
+    },
+    InputTextForRange {
+        document: DocumentId,
+        view: ViewId,
+        range: std::ops::Range<usize>,
+    },
+    InputSelectedRange {
+        document: DocumentId,
+        view: ViewId,
+    },
+    InputMarkedRange {
+        document: DocumentId,
+        view: ViewId,
+    },
+    InputToBuffer {
+        document: DocumentId,
+        view: ViewId,
+        offset: usize,
+    },
+    BufferToInput {
+        document: DocumentId,
+        view: ViewId,
+        offset: usize,
+    },
 }
 
 /// Query の応答。
@@ -48,6 +111,18 @@ pub enum Query {
 pub enum QueryResponse {
     AppInfo(AppInfo),
     StatusMessage(String),
+    // 版0.2
+    VaultFiles(VaultFiles),
+    DocumentInfo(DocumentInfo),
+    ViewState(ViewState),
+    Text(String),
+    /// 範囲と、逆向きか（`head` が前）
+    SelectedRange {
+        range: std::ops::Range<usize>,
+        reversed: bool,
+    },
+    MarkedRange(Option<std::ops::Range<usize>>),
+    Offset(usize),
 }
 
 /// アプリケーションの情報。
@@ -64,7 +139,38 @@ pub struct AppInfo {
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[non_exhaustive]
 pub enum Event {
-    StatusMessageChanged { text: String },
+    StatusMessageChanged {
+        text: String,
+    },
+    // 版0.2（Spec §5A.3）
+    VaultOpened {
+        root: String,
+    },
+    DocumentOpened {
+        document: DocumentId,
+        view: ViewId,
+        path: String,
+    },
+    DocumentClosed {
+        document: DocumentId,
+    },
+    DocumentChanged {
+        document: DocumentId,
+        version: u64,
+        edits: Vec<TextEdit>,
+    },
+    ViewStateChanged {
+        document: DocumentId,
+        view: ViewId,
+        state: ViewState,
+    },
+    DirtyChanged {
+        document: DocumentId,
+        dirty: bool,
+    },
+    DocumentSaved {
+        document: DocumentId,
+    },
 }
 
 /// エラーの種類（Spec §6）。
@@ -77,6 +183,10 @@ pub enum ErrorCode {
     Unsupported,
     Cancelled,
     Internal,
+    // 版0.2
+    Conflict,
+    InvalidData,
+    Io,
 }
 
 /// APIの共通のエラー。`message` に文書の内容・シークレットを含めない。
@@ -143,7 +253,7 @@ mod tests {
 
     #[test]
     fn api_version_display() {
-        assert_eq!(API_VERSION.to_string(), "0.1");
+        assert_eq!(API_VERSION.to_string(), "0.2");
     }
 
     #[test]
@@ -166,5 +276,72 @@ mod tests {
         let err = ApiError::new(ErrorCode::InvalidArgument, "too long");
         let json = serde_json::to_string(&err).unwrap();
         assert_eq!(serde_json::from_str::<ApiError>(&json).unwrap(), err);
+    }
+}
+
+#[cfg(test)]
+mod v0_2_tests {
+    use super::*;
+
+    fn round_trip<T: Serialize + for<'de> Deserialize<'de> + PartialEq + std::fmt::Debug>(v: T) {
+        let json = serde_json::to_string(&v).unwrap();
+        assert_eq!(serde_json::from_str::<T>(&json).unwrap(), v);
+    }
+
+    #[test]
+    fn version_0_2_types_round_trip_through_serde() {
+        let (d, v) = (DocumentId(3), ViewId(0));
+        round_trip(Command::Edit {
+            document: d,
+            view: v,
+            command: EditCommand::SetComposition {
+                text: "にほ".into(),
+                selected: Some(0..3),
+            },
+        });
+        round_trip(Command::Edit {
+            document: d,
+            view: v,
+            command: EditCommand::SetSelections {
+                selections: vec![Selection { anchor: 4, head: 1 }],
+                primary: 0,
+            },
+        });
+        round_trip(Query::InputTextForRange {
+            document: d,
+            view: v,
+            range: 1..5,
+        });
+        round_trip(Event::ViewStateChanged {
+            document: d,
+            view: v,
+            state: ViewState {
+                selections: vec![Selection { anchor: 0, head: 0 }],
+                primary: 0,
+                composition: Some(CompositionState {
+                    range: 0..0,
+                    text: "日".into(),
+                    selected: 3..3,
+                }),
+            },
+        });
+        round_trip(Event::DocumentChanged {
+            document: d,
+            version: 9,
+            edits: vec![TextEdit {
+                start: 1,
+                old_len: 2,
+                new_len: 3,
+            }],
+        });
+        round_trip(QueryResponse::VaultFiles(VaultFiles {
+            files: vec!["a/b.md".into()],
+            skipped: 1,
+        }));
+        round_trip(QueryResponse::SelectedRange {
+            range: 2..2,
+            reversed: true,
+        });
+        round_trip(ApiError::new(ErrorCode::Conflict, "n.md: changed"));
     }
 }

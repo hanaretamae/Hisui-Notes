@@ -7,12 +7,15 @@ use app_api::{
 };
 use app_core::Core;
 use futures_channel::mpsc::TryRecvError;
-use platform::PlatformServices;
+use platform::{DesktopFileSystem, FileSystem, PlatformServices};
 
 struct FakePlatform;
 impl PlatformServices for FakePlatform {
     fn name(&self) -> String {
         "test-os".into()
+    }
+    fn file_system(&self) -> Arc<dyn FileSystem> {
+        Arc::new(DesktopFileSystem)
     }
 }
 
