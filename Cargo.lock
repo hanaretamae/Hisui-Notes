@@ -2328,7 +2328,6 @@ checksum = "7f24254aa9a54b5c858eaee2f5bccdb46aaf0e486a595ed5fd8f86ba55232a70"
 name = "hisui-notes"
 version = "0.1.0"
 dependencies = [
- "app-api",
  "app-core",
  "env_logger",
  "gpui",
@@ -5371,6 +5370,7 @@ version = "0.1.0"
 dependencies = [
  "app-api",
  "app-core",
+ "document",
  "futures",
  "gpui",
  "platform",

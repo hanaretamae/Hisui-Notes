@@ -27,7 +27,7 @@ devShellの中で実行する（`nix develop -c <コマンド>` でも可）。C
 
 ```sh
 cargo build                                              # ビルド
-cargo run -p hisui-notes                                 # アプリの起動（Linux: Wayland・X11）
+cargo run -p hisui-notes -- [Vaultのディレクトリ]        # アプリの起動（Linux: Wayland・X11）。省略時は画面から選ぶ
 cargo test --workspace --locked                          # テスト
 cargo fmt --all --check                                  # 書式の検査
 cargo clippy --workspace --all-targets --locked -- -D warnings  # Lint

@@ -2,8 +2,10 @@
 //!
 //! Core・Vault はこのトレイトを通して OS の機能を使う。
 
+mod font;
 mod fs;
 
+pub use font::system_ui_font_family;
 pub use fs::{DesktopFileSystem, DirEntry, EntryKind, FileSystem};
 
 use std::sync::Arc;
